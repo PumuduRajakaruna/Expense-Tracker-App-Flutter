@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/components/expense_summary.dart';
 import 'package:flutter_application/components/expense_tile.dart';
 import 'package:flutter_application/data/expense_data.dart';
 import 'package:flutter_application/models/expense_item.dart';
@@ -83,13 +84,21 @@ class _HomePageState extends State<HomePage> {
             onPressed: addNewExpense,
             child: Icon(Icons.add),
           ),
-          body: ListView.builder(
-              itemCount: value.getAllExpenseList().length,
-              itemBuilder: (context, index) => ExpenseTile(
-                    name: value.getAllExpenseList()[index].name,
-                    amount: value.getAllExpenseList()[index].amount,
-                    dateTime: value.getAllExpenseList()[index].dateTime,
-                  )))),
+          body: ListView(children: [
+            //weekly summary
+            ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+
+            //exepenses list
+            ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: value.getAllExpenseList().length,
+                itemBuilder: (context, index) => ExpenseTile(
+                      name: value.getAllExpenseList()[index].name,
+                      amount: value.getAllExpenseList()[index].amount,
+                      dateTime: value.getAllExpenseList()[index].dateTime,
+                    )),
+          ]))),
     );
   }
 }
