@@ -87,13 +87,29 @@ class ExpenseSummary extends StatelessWidget {
         children: [
           // week total
           Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.only(
+                left: 25.0, right: 25.0, bottom: 5.0, top: 25.0),
             child: Row(
               children: [
                 const Text('Week Total: ',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(
                     '\Rs${calculateWeekTotal(value, sunday, monday, tueday, wedday, thuday, friday, satday)}',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+
+          // Today's daily expense
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 25.0, right: 25.0, bottom: 25.0, top: 5.0),
+            child: Row(
+              children: [
+                const Text('Today\'s Total: ',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                    '\Rs${value.calculateDailyExpenseSummary()[convertDateTimeToString(DateTime.now())] ?? 0}',
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
