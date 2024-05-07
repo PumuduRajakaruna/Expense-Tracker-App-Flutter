@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/data/expense_data.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-import '/pages/home-page.dart';
+import '/pages/start-screen.dart';
 
 void main() async {
   // initialize the database
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       create: (context) => ExpenseData(),
       builder: (context, child) => const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: StartScreen(),
       ),
     );
   }
