@@ -88,16 +88,25 @@ class ExpenseSummary extends StatelessWidget {
           // week total
           Padding(
             padding: const EdgeInsets.only(
-                left: 25.0, right: 25.0, bottom: 5.0, top: 25.0),
+                left: 25.0, right: 25.0, bottom: 5.0, top: 32.0),
             child: Row(
               children: [
-                const Text('Week Total: ',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                const Text(
+                  'Week Total: ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.white, // Text color
+                  ),
+                ),
                 Text(
-                    '\Rs.${calculateWeekTotal(value, sunday, monday, tueday, wedday, thuday, friday, satday)}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20)),
+                  '\Rs.${calculateWeekTotal(value, sunday, monday, tueday, wedday, thuday, friday, satday)}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.white, // Text color
+                  ),
+                ),
               ],
             ),
           ),
@@ -110,12 +119,17 @@ class ExpenseSummary extends StatelessWidget {
               children: [
                 const Text(
                   'Today\'s Total: ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.white),
                 ),
                 Text(
                   '\Rs.${value.calculateDailyExpenseSummary()[convertDateTimeToString(DateTime.now())]?.toStringAsFixed(2) ?? '0.00'}',
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.white),
                 ),
               ],
             ),

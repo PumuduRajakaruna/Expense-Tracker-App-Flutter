@@ -13,7 +13,8 @@ class HiveDataBase {
       List<dynamic> expenseFormatted = [
         expense.name,
         expense.amount,
-        expense.dateTime
+        expense.dateTime,
+        // expense.category
       ];
       allExpensesFormatted.add(expenseFormatted);
     }
@@ -32,6 +33,7 @@ class HiveDataBase {
       String name = savedExpenses[i][0];
       String amount = savedExpenses[i][1];
       DateTime dateTime = savedExpenses[i][2];
+      // Category category = savedExpenses[i][3];
 
       // create expense item
       ExpenseItem expense =

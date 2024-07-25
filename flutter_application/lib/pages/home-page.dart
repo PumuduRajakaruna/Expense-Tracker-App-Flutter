@@ -3,7 +3,6 @@ import 'package:flutter_application/components/expense_summary.dart';
 import 'package:flutter_application/components/expense_tile.dart';
 import 'package:flutter_application/data/expense_data.dart';
 import 'package:flutter_application/models/expense_item.dart';
-import 'package:flutter_application/date_time/date_time_helper.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   final newExpenseNameController = TextEditingController();
   final newExpenseAmountController = TextEditingController();
   DateTime? selectedDate;
+  Category? selectedCategory;
 
   @override
   void initState() {
@@ -31,56 +31,115 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) => StatefulBuilder(builder: (context, setState) {
         return AlertDialog(
-          title: const Text('Add New Expense'),
+          title: const Center(
+            child: Text(
+              'Add New Expense',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: newExpenseNameController,
-                decoration: const InputDecoration(hintText: 'Expense Name'),
+                decoration: InputDecoration(
+                  hintText: 'Expense Name',
+                  hintStyle: TextStyle(
+                    color: Colors.grey.withOpacity(0.7),
+                  ),
+                ),
               ),
               TextField(
                 controller: newExpenseAmountController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: 'Expense Amount'),
+                decoration: InputDecoration(
+                    hintText: 'Expense Amount',
+                    hintStyle: TextStyle(
+                      color: Colors.grey.withOpacity(0.7),
+                    )),
               ),
               const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: selectedDate ?? DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (pickedDate != null && pickedDate != selectedDate) {
-                      setState(() {
-                        selectedDate = pickedDate;
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text(
-                    selectedDate == null
-                        ? 'Select Date'
-                        : 'Selected Date: ${selectedDate!.day.toString()}/${selectedDate!.month.toString()}/${selectedDate!.year.toString()}',
+              Row(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (pickedDate != null && pickedDate != selectedDate) {
+                          setState(() {
+                            selectedDate = pickedDate;
+                          });
+                        }
+                      },
+                      label: Text(
+                        selectedDate == null
+                            ? 'Select Date'
+                            : '${selectedDate!.day.toString()}/${selectedDate!.month.toString()}/${selectedDate!.year.toString()}',
+                      ),
+                      icon: const Icon(Icons.calendar_today),
+                    ),
                   ),
-                ),
+                  DropdownButton<Category>(
+                    hint: const Text('Select Category'),
+                    value: selectedCategory,
+                    onChanged: (Category? newValue) {
+                      setState(() {
+                        selectedCategory = newValue;
+                        debugPrint('Selected category: $selectedCategory');
+                      });
+                    },
+                    items: Category.values
+                        .map<DropdownMenuItem<Category>>((Category value) {
+                      return DropdownMenuItem<Category>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
+              const SizedBox(height: 10),
             ],
           ),
           actions: [
-            MaterialButton(
-              onPressed: save,
-              child: Text("Save"),
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: save,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: const Text(
+                    "Save",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
 
-            //cancel button
-            MaterialButton(
-              onPressed: cancel,
-              child: Text("Cancel"),
+                //cancel button
+                OutlinedButton(
+                  onPressed: cancel,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.blue),
+                  ),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         );
@@ -105,6 +164,7 @@ class _HomePageState extends State<HomePage> {
         name: newExpenseNameController.text,
         amount: amount,
         dateTime: selectedDate ?? DateTime.now(),
+        // category: selectedCategory!,
       );
 
       //add new expense
@@ -125,6 +185,7 @@ class _HomePageState extends State<HomePage> {
     newExpenseNameController.clear();
     newExpenseAmountController.clear();
     selectedDate = null;
+    selectedCategory = null;
   }
 
   @override
@@ -149,7 +210,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             child: Column(children: [
-              const SizedBox(height: 25),
+              const SizedBox(height: 32),
               //weekly summary
               ExpenseSummary(startOfWeek: value.startOfWeekDate()),
 
