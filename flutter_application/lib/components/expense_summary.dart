@@ -92,10 +92,12 @@ class ExpenseSummary extends StatelessWidget {
             child: Row(
               children: [
                 const Text('Week Total: ',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 Text(
-                    '\Rs${calculateWeekTotal(value, sunday, monday, tueday, wedday, thuday, friday, satday)}',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    '\Rs.${calculateWeekTotal(value, sunday, monday, tueday, wedday, thuday, friday, satday)}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20)),
               ],
             ),
           ),
@@ -106,11 +108,15 @@ class ExpenseSummary extends StatelessWidget {
                 left: 25.0, right: 25.0, bottom: 25.0, top: 5.0),
             child: Row(
               children: [
-                const Text('Today\'s Total: ',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Today\'s Total: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
                 Text(
-                    '\Rs${value.calculateDailyExpenseSummary()[convertDateTimeToString(DateTime.now())] ?? 0}',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                  '\Rs.${value.calculateDailyExpenseSummary()[convertDateTimeToString(DateTime.now())]?.toStringAsFixed(2) ?? '0.00'}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                ),
               ],
             ),
           ),

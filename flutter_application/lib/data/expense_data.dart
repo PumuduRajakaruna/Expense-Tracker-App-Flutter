@@ -70,7 +70,11 @@ class ExpenseData extends ChangeNotifier {
         break;
       }
     }
-    return startOfWeek!;
+    if (startOfWeek == null) {
+      throw Exception("Start of week not found");
+    }
+
+    return startOfWeek;
   }
 
   // Calculate daily expense summary

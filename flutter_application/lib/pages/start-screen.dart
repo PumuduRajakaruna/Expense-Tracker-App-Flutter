@@ -17,44 +17,72 @@ class _StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(
-      Duration(seconds: 5), // Wait for 5 seconds
-      () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      },
-    );
+    // Timer(
+    //   Duration(seconds: 5), // Wait for 5 seconds
+    //   () {
+    //     Navigator.pushReplacement(
+    //       context,
+    //       MaterialPageRoute(builder: (context) => HomePage()),
+    //     );
+    //   },
+    // );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+        body: Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color.fromARGB(255, 84, 170, 239),
+            Color.fromARGB(255, 206, 101, 224)
+          ],
+        ),
+      ),
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            Image.asset(
+              'assets/images/home_icon.png',
+              height: 200,
+            ),
+            const Text(
               'Expense Tracker',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.play_arrow, color: Colors.white),
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               },
-              child: Text('Start'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    const Color.fromARGB(255, 255, 204, 0), // Light yellow
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              label: const Text(
+                'Start',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
             ),
           ],
         ),
       ),
-    );
+    ));
   }
 }
