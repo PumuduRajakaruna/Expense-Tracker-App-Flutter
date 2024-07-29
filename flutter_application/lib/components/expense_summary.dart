@@ -4,6 +4,8 @@ import 'package:flutter_application/data/expense_data.dart';
 import 'package:flutter_application/date_time/date_time_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
+import 'package:flutter_application/bar_graph/category_graph.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ExpenseSummary extends StatelessWidget {
   final DateTime startOfWeek;
@@ -67,26 +69,27 @@ class ExpenseSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PageController _pageController = PageController();
     // get yyyymmdd for each day of this week
-    String sunday =
-        convertDateTimeToString(startOfWeek.add(const Duration(days: 0)));
     String monday =
-        convertDateTimeToString(startOfWeek.add(const Duration(days: 1)));
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 0)));
     String tueday =
-        convertDateTimeToString(startOfWeek.add(const Duration(days: 2)));
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 1)));
     String wedday =
-        convertDateTimeToString(startOfWeek.add(const Duration(days: 3)));
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 2)));
     String thuday =
-        convertDateTimeToString(startOfWeek.add(const Duration(days: 4)));
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 3)));
     String friday =
-        convertDateTimeToString(startOfWeek.add(const Duration(days: 5)));
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 4)));
     String satday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 5)));
+    String sunday =
         convertDateTimeToString(startOfWeek.add(const Duration(days: 6)));
 
     return Consumer<ExpenseData>(
       builder: (context, value, child) => Column(
         children: [
-          // week total
+          // Week total
           Padding(
             padding: const EdgeInsets.only(
                 left: 25.0, right: 25.0, bottom: 5.0, top: 32.0),
@@ -136,32 +139,64 @@ class ExpenseSummary extends StatelessWidget {
             ),
           ),
 
-          SizedBox(
+          // PageView for graphs
+          Container(
             height: 200,
-            child: MyBarGraph(
-                maxY: calculateMaxAmount(value, sunday, monday, tueday, wedday,
-                    thuday, friday, satday),
-                sunAmount: value.calculateDailyExpenseSummary()[sunday] ?? 0,
-                monAmount: value.calculateDailyExpenseSummary()[monday] ?? 0,
-                tueAmount: value.calculateDailyExpenseSummary()[tueday] ?? 0,
-                wedAmount: value.calculateDailyExpenseSummary()[wedday] ?? 0,
-                thuAmount: value.calculateDailyExpenseSummary()[thuday] ?? 0,
-                friAmount: value.calculateDailyExpenseSummary()[friday] ?? 0,
-                satAmount: value.calculateDailyExpenseSummary()[satday] ?? 0),
+            child: PageView(
+              controller: _pageController,
+              children: [
+                MyBarGraph(
+                  maxY: calculateMaxAmount(value, sunday, monday, tueday,
+                      wedday, thuday, friday, satday),
+                  sunAmount: value.calculateDailyExpenseSummary()[sunday] ?? 0,
+                  monAmount: value.calculateDailyExpenseSummary()[monday] ?? 0,
+                  tueAmount: value.calculateDailyExpenseSummary()[tueday] ?? 0,
+                  wedAmount: value.calculateDailyExpenseSummary()[wedday] ?? 0,
+                  thuAmount: value.calculateDailyExpenseSummary()[thuday] ?? 0,
+                  friAmount: value.calculateDailyExpenseSummary()[friday] ?? 0,
+                  satAmount: value.calculateDailyExpenseSummary()[satday] ?? 0,
+                ),
+                CategoryGraph(
+                  maxY: calculateMaxAmount(value, sunday, monday, tueday,
+                      wedday, thuday, friday, satday),
+                  foodAmount:
+                      value.calculateWeeklyExpenseSummaryByCategory()['food'] ??
+                          0,
+                  transportAmount:
+                      value.calculateWeeklyExpenseSummaryByCategory()[
+                              'transport'] ??
+                          0,
+                  shoppingAmount:
+                      value.calculateWeeklyExpenseSummaryByCategory()[
+                              'shopping'] ??
+                          0,
+                  leisureAmount:
+                      value.calculateWeeklyExpenseSummaryByCategory()[
+                              'leisure'] ??
+                          0,
+                  otherAmount: value
+                          .calculateWeeklyExpenseSummaryByCategory()['other'] ??
+                      0,
+                ),
+              ],
+            ),
           ),
-          // SizedBox(
-          //   height: 200,
-          //   child: MyBarGraph(
-          //       maxY: calculateMaxAmount(value, sunday, monday, tueday, wedday,
-          //           thuday, friday, satday),
-          //       sunAmount: value.calculateWeeklyExpenseSummaryByCategory()['travel'] ?? 0,
-          //       monAmount: value.calculateDailyExpenseSummary()[monda] ?? 0,
-          //       tueAmount: value.calculateWeeklyExpenseSummaryByCategory()[tueday] ?? 0,
-          //       wedAmount: value.calculateWeeklyExpenseSummaryByCategory()[wedday] ?? 0,
-          //       thuAmount: value.calculateDailyExpenseSummary()[thuday] ?? 0,
-          //       friAmount: value.calculateDailyExpenseSummary()[friday] ?? 0,
-          //       satAmount: value.calculateDailyExpenseSummary()[satday] ?? 0),
-          // )
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SmoothPageIndicator(
+              controller: _pageController,
+              count: 2,
+              effect: const WormEffect(
+                dotHeight: 8.0,
+                dotWidth: 8.0,
+                activeDotColor: Color.fromARGB(255, 3, 64, 113),
+                dotColor: Color.fromARGB(255, 246, 245, 245),
+              ),
+            ),
+          ),
         ],
       ),
     );

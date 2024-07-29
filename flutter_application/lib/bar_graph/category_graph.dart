@@ -1,43 +1,36 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/bar_graph/bar_data.dart';
+import 'package:flutter_application/bar_graph/category_bar_data.dart';
+import 'package:fl_chart/fl_chart.dart';
 
-class MyBarGraph extends StatelessWidget {
+class CategoryGraph extends StatelessWidget {
   final double? maxY;
-  final double sunAmount;
-  final double monAmount;
-  final double tueAmount;
-  final double wedAmount;
-  final double thuAmount;
-  final double friAmount;
-  final double satAmount;
+  final double foodAmount;
+  final double transportAmount;
+  final double shoppingAmount;
+  final double leisureAmount;
+  final double otherAmount;
 
-  const MyBarGraph({
+  const CategoryGraph({
     super.key,
     required this.maxY,
-    required this.sunAmount,
-    required this.monAmount,
-    required this.tueAmount,
-    required this.wedAmount,
-    required this.thuAmount,
-    required this.friAmount,
-    required this.satAmount,
+    required this.foodAmount,
+    required this.transportAmount,
+    required this.shoppingAmount,
+    required this.leisureAmount,
+    required this.otherAmount,
   });
 
   @override
   Widget build(BuildContext context) {
-    //initialize bar data
-    BarData myBarData = BarData(
-      sunAmount: sunAmount,
-      monAmount: monAmount,
-      tueAmount: tueAmount,
-      wedAmount: wedAmount,
-      thuAmount: thuAmount,
-      friAmount: friAmount,
-      satAmount: satAmount,
+    CategoryBarData myBarData = CategoryBarData(
+      foodAmount: foodAmount,
+      transportAmount: transportAmount,
+      shoppingAmount: shoppingAmount,
+      leisureAmount: leisureAmount,
+      otherAmount: otherAmount,
     );
 
-    myBarData.initializeBarData();
+    myBarData.initializeCategoryBarData();
 
     return BarChart(BarChartData(
       maxY: maxY,
@@ -81,30 +74,24 @@ Widget getBottomTitles(double value, TitleMeta meta) {
   Widget text;
   switch (value.toInt()) {
     case 0:
-      text = const Text('M', style: style);
+      text = const Text('Food', style: style);
       break;
     case 1:
-      text = const Text('T', style: style);
+      text = const Text('Transport', style: style);
       break;
     case 2:
-      text = const Text('W', style: style);
+      text = const Text('Shopping', style: style);
       break;
     case 3:
-      text = const Text('T', style: style);
+      text = const Text('Leisure', style: style);
       break;
     case 4:
-      text = const Text('F', style: style);
-      break;
-    case 5:
-      text = const Text('S', style: style);
-      break;
-    case 6:
-      text = const Text('S', style: style);
+      text = const Text('Other', style: style);
       break;
     default:
       text = const Text('', style: style);
       break;
   }
 
-  return SideTitleWidget(child: text, axisSide: meta.axisSide);
+  return SideTitleWidget(axisSide: meta.axisSide, child: text);
 }

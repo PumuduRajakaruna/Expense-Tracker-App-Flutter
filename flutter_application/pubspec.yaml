@@ -41,6 +41,7 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_slidable: ^1.2.0
   logger: ^2.4.0
+  smooth_page_indicator: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:

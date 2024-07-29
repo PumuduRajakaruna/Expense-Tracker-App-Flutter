@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
               //weekly summary
               ExpenseSummary(startOfWeek: value.startOfWeekDate()),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
               //exepenses list
               Expanded(
