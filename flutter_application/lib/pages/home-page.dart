@@ -3,6 +3,7 @@ import 'package:flutter_application/components/expense_summary.dart';
 import 'package:flutter_application/components/expense_tile.dart';
 import 'package:flutter_application/data/expense_data.dart';
 import 'package:flutter_application/models/expense_item.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +19,8 @@ class _HomePageState extends State<HomePage> {
   final newExpenseAmountController = TextEditingController();
   DateTime? selectedDate;
   Category? selectedCategory;
+  //Enum? cat;
+  String? category;
 
   @override
   void initState() {
@@ -92,15 +95,17 @@ class _HomePageState extends State<HomePage> {
                     value: selectedCategory,
                     onChanged: (Category? newValue) {
                       setState(() {
+                        // cat= newValue;
+                        category = newValue.toString().split('.').last;
                         selectedCategory = newValue;
-                        debugPrint('Selected category: $selectedCategory');
+                        Logger().i("cat value $category");
                       });
                     },
                     items: Category.values
                         .map<DropdownMenuItem<Category>>((Category value) {
                       return DropdownMenuItem<Category>(
                         value: value,
-                        child: Text(value.name),
+                        child: Text(value.toString().split('.').last),
                       );
                     }).toList(),
                   ),
@@ -156,7 +161,8 @@ class _HomePageState extends State<HomePage> {
   void save() {
     // only save if both fields are filled
     if (newExpenseNameController.text.isNotEmpty &&
-        newExpenseAmountController.text.isNotEmpty) {
+        newExpenseAmountController.text.isNotEmpty &&
+        category != null) {
       String amount = '${newExpenseAmountController.text}';
 
       //create expense item
@@ -164,7 +170,7 @@ class _HomePageState extends State<HomePage> {
         name: newExpenseNameController.text,
         amount: amount,
         dateTime: selectedDate ?? DateTime.now(),
-        // category: selectedCategory!,
+        category: category,
       );
 
       //add new expense
@@ -226,6 +232,7 @@ class _HomePageState extends State<HomePage> {
                           name: value.getAllExpenseList()[index].name,
                           amount: value.getAllExpenseList()[index].amount,
                           dateTime: value.getAllExpenseList()[index].dateTime,
+                          category: value.getAllExpenseList()[index].category,
                           deleteTapped: (p0) =>
                               deleteExpense(value.getAllExpenseList()[index]),
                         )),

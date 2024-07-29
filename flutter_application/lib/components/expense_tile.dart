@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -5,13 +6,23 @@ class ExpenseTile extends StatelessWidget {
   final String name;
   final String amount;
   final DateTime dateTime;
+  final String? category;
   void Function(BuildContext)? deleteTapped;
+
+  final categoryIcons = {
+    'food': Icons.fastfood,
+    'transport': Icons.directions_bus,
+    'shopping': Icons.shopping_cart,
+    'leisure': Icons.beach_access,
+    'other': Icons.category,
+  };
 
   ExpenseTile({
     super.key,
     required this.name,
     required this.amount,
     required this.dateTime,
+    this.category,
     required this.deleteTapped,
   });
 
@@ -40,7 +51,15 @@ class ExpenseTile extends StatelessWidget {
             ),
           ),
           child: ListTile(
-            title: Text(name),
+            title: Row(
+              children: [
+                Text(name),
+                const SizedBox(width: 10),
+                Icon(
+                  categoryIcons[category ?? Icons.category],
+                ),
+              ],
+            ),
             subtitle: Text(
               '${dateTime.day.toString()}/${dateTime.month.toString()}/${dateTime.year.toString()}',
               style: const TextStyle(

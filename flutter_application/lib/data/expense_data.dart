@@ -23,15 +23,15 @@ class ExpenseData extends ChangeNotifier {
   // add expense
   void addNewExpense(ExpenseItem newExpense) {
     overallExpenseList.add(newExpense);
-    notifyListeners();
     db.saveData(overallExpenseList);
+    notifyListeners();
   }
 
   // delete expense
   void deleteExpense(ExpenseItem expense) {
     overallExpenseList.remove(expense);
-    notifyListeners();
     db.saveData(overallExpenseList);
+    notifyListeners();
   }
 
   //get weekday from a dateTime object
@@ -93,7 +93,52 @@ class ExpenseData extends ChangeNotifier {
         dailyExpenseSummary.addAll({date: amount});
       }
     }
+
+    calculateWeeklyExpenseSummaryByCategory();
+
     return dailyExpenseSummary;
+  }
+
+  Map<String, double> calculateWeeklyExpenseSummaryByCategory() {
+    Map<String, double> weeklyExpenseSummaryByCategory = {};
+
+    // Get the start and end of the current week
+    DateTime now = DateTime.now();
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(const Duration(days: 6));
+
+    for (var expense in overallExpenseList) {
+      // Convert amount from String to int
+      double amount = 0.0;
+      try {
+        amount = double.parse(expense.amount);
+      } catch (e) {
+        print('Invalid amount for expense ${expense.name}: ${expense.amount}');
+        continue; // Skip this expense if amount is invalid
+      }
+
+      // Check if the expense date is within the current week
+      if (expense.dateTime
+              .isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
+          expense.dateTime.isBefore(endOfWeek.add(const Duration(days: 1)))) {
+        String category = expense.category ?? 'Uncategorized';
+
+        if (weeklyExpenseSummaryByCategory.containsKey(category)) {
+          weeklyExpenseSummaryByCategory[category] =
+              weeklyExpenseSummaryByCategory[category]! + amount;
+        } else {
+          weeklyExpenseSummaryByCategory[category] = amount;
+        }
+      }
+    }
+
+    // Log the weekly expense summary by category
+    print('Weekly Expense Summary by Category:');
+    weeklyExpenseSummaryByCategory.forEach((category, total) {
+      print('$category: \$${total.toStringAsFixed(2)}');
+    });
+
+    return weeklyExpenseSummaryByCategory;
   }
 
   // Convert DateTime object to string yyyymmdd

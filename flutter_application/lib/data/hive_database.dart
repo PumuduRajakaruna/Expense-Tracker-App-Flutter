@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 
 class HiveDataBase {
   // reference our boxfinal
-  final _mybox = Hive.box('expenses_db2');
+  final _mybox = Hive.box('expenses_db3');
 
   // write data
   void saveData(List<ExpenseItem> allExpense) {
@@ -14,7 +14,7 @@ class HiveDataBase {
         expense.name,
         expense.amount,
         expense.dateTime,
-        // expense.category
+        expense.category
       ];
       allExpensesFormatted.add(expenseFormatted);
     }
@@ -33,11 +33,11 @@ class HiveDataBase {
       String name = savedExpenses[i][0];
       String amount = savedExpenses[i][1];
       DateTime dateTime = savedExpenses[i][2];
-      // Category category = savedExpenses[i][3];
+      String category = savedExpenses[i][3];
 
       // create expense item
-      ExpenseItem expense =
-          ExpenseItem(name: name, amount: amount, dateTime: dateTime);
+      ExpenseItem expense = ExpenseItem(
+          name: name, amount: amount, dateTime: dateTime, category: category);
       allExpenses.add(expense);
     }
     return allExpenses;

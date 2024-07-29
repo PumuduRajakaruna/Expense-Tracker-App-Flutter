@@ -3,6 +3,7 @@ import 'package:flutter_application/bar_graph/bar_graph.dart';
 import 'package:flutter_application/data/expense_data.dart';
 import 'package:flutter_application/date_time/date_time_helper.dart';
 import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
 
 class ExpenseSummary extends StatelessWidget {
   final DateTime startOfWeek;
@@ -148,6 +149,19 @@ class ExpenseSummary extends StatelessWidget {
                 friAmount: value.calculateDailyExpenseSummary()[friday] ?? 0,
                 satAmount: value.calculateDailyExpenseSummary()[satday] ?? 0),
           ),
+          // SizedBox(
+          //   height: 200,
+          //   child: MyBarGraph(
+          //       maxY: calculateMaxAmount(value, sunday, monday, tueday, wedday,
+          //           thuday, friday, satday),
+          //       sunAmount: value.calculateWeeklyExpenseSummaryByCategory()['travel'] ?? 0,
+          //       monAmount: value.calculateDailyExpenseSummary()[monda] ?? 0,
+          //       tueAmount: value.calculateWeeklyExpenseSummaryByCategory()[tueday] ?? 0,
+          //       wedAmount: value.calculateWeeklyExpenseSummaryByCategory()[wedday] ?? 0,
+          //       thuAmount: value.calculateDailyExpenseSummary()[thuday] ?? 0,
+          //       friAmount: value.calculateDailyExpenseSummary()[friday] ?? 0,
+          //       satAmount: value.calculateDailyExpenseSummary()[satday] ?? 0),
+          // )
         ],
       ),
     );
