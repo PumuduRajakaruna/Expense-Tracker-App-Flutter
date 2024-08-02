@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/bar_graph/bar_graph.dart';
 import 'package:flutter_application/data/expense_data.dart';
 import 'package:flutter_application/date_time/date_time_helper.dart';
+import 'package:flutter_application/pages/comparison_page.dart';
 import 'package:provider/provider.dart';
-import 'package:logger/logger.dart';
 import 'package:flutter_application/bar_graph/category_graph.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -40,10 +40,22 @@ class ExpenseSummary extends StatelessWidget {
 
     // get largest amount
     // and increase the cap slighltly so the graph looks almost full
-    max = values.last * 1.1;
+    max = values.last * 1.4;
 
     return max == 0 ? 100 : max;
   }
+
+  // double calculateMonthTotalByCategory(
+  //     ExpenseData value, String month, String category) {
+  //   double total = 0;
+  //   for (var expense in value.getAllExpenseList()) {
+  //     if (expense.date.substring(0, 7) == month &&
+  //         expense.category == category) {
+  //       total += expense.amount;
+  //     }
+  //   }
+  //   return total;
+  // }
 
   // calculate the week total
   String calculateWeekTotal(
@@ -92,7 +104,7 @@ class ExpenseSummary extends StatelessWidget {
           // Week total
           Padding(
             padding: const EdgeInsets.only(
-                left: 25.0, right: 25.0, bottom: 5.0, top: 32.0),
+                left: 25.0, right: 25.0, bottom: 5.0, top: 5.0),
             child: Row(
               children: [
                 const Text(
@@ -134,6 +146,9 @@ class ExpenseSummary extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       color: Colors.white),
+                ),
+                const SizedBox(
+                  width: 20,
                 ),
               ],
             ),

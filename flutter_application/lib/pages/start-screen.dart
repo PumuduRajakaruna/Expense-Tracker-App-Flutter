@@ -61,7 +61,7 @@ class _StartScreenState extends State<StartScreen> {
             ElevatedButton.icon(
               icon: const Icon(Icons.play_arrow, color: Colors.white),
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomePage()),
                 );

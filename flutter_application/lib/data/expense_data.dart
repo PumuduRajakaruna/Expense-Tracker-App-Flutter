@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application/data/hive_database.dart';
 
@@ -133,10 +135,10 @@ class ExpenseData extends ChangeNotifier {
     }
 
     // Log the weekly expense summary by category
-    print('Weekly Expense Summary by Category:');
-    weeklyExpenseSummaryByCategory.forEach((category, total) {
-      print('$category: \$${total.toStringAsFixed(2)}');
-    });
+    // print('Weekly Expense Summary by Category:');
+    // weeklyExpenseSummaryByCategory.forEach((category, total) {
+    //   print('$category: \$${total.toStringAsFixed(2)}');
+    // });
 
     return weeklyExpenseSummaryByCategory;
   }
@@ -156,5 +158,60 @@ class ExpenseData extends ChangeNotifier {
     String yyyyMMdd = year + month + day;
 
     return yyyyMMdd;
+  }
+
+  Map<String, double> calculateMonthlyExpenseSummaryByCategory(DateTime month) {
+    Map<String, double> monthlyExpenseSummaryByCategory = {};
+
+    // Get the start and end of the selected month
+    DateTime startOfMonth = DateTime(month.year, month.month, 1);
+    DateTime endOfMonth = DateTime(month.year, month.month + 1, 0);
+
+    for (var expense in overallExpenseList) {
+      // Convert amount from String to double
+      double amount = 0.0;
+      try {
+        amount = double.parse(expense.amount);
+      } catch (e) {
+        print('Invalid amount for expense ${expense.name}: ${expense.amount}');
+        continue; // Skip this expense if amount is invalid
+      }
+
+      // Check if the expense date is within the selected month
+      if (expense.dateTime.isAfter(startOfMonth.subtract(Duration(days: 1))) &&
+          expense.dateTime.isBefore(endOfMonth.add(Duration(days: 1)))) {
+        String category = expense.category ?? 'Uncategorized';
+
+        if (monthlyExpenseSummaryByCategory.containsKey(category)) {
+          monthlyExpenseSummaryByCategory[category] =
+              monthlyExpenseSummaryByCategory[category]! + amount;
+        } else {
+          monthlyExpenseSummaryByCategory[category] = amount;
+        }
+      }
+    }
+    return monthlyExpenseSummaryByCategory;
+  }
+
+  double maximumMonthlyExpenseByCategory(DateTime month1, DateTime month2) {
+    double max = 0;
+    Map<String, double> month1Summary = {};
+    Map<String, double> month2Summary = {};
+
+    month1Summary = calculateMonthlyExpenseSummaryByCategory(month1);
+    month2Summary = calculateMonthlyExpenseSummaryByCategory(month2);
+
+    for (var key in month1Summary.keys) {
+      if (month1Summary[key]! > max) {
+        max = month1Summary[key]!;
+      }
+    }
+
+    for (var key in month2Summary.keys) {
+      if (month2Summary[key]! > max) {
+        max = month2Summary[key]!;
+      }
+    }
+    return max.toDouble() * 1.4;
   }
 }

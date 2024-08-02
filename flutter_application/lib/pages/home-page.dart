@@ -3,7 +3,7 @@ import 'package:flutter_application/components/expense_summary.dart';
 import 'package:flutter_application/components/expense_tile.dart';
 import 'package:flutter_application/data/expense_data.dart';
 import 'package:flutter_application/models/expense_item.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter_application/pages/comparison_page.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -98,7 +98,6 @@ class _HomePageState extends State<HomePage> {
                         // cat= newValue;
                         category = newValue.toString().split('.').last;
                         selectedCategory = newValue;
-                        Logger().i("cat value $category");
                       });
                     },
                     items: Category.values
@@ -216,7 +215,48 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             child: Column(children: [
-              const SizedBox(height: 32),
+              AppBar(
+                  title: const Text('Weekly Summary'),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(
+                        context,
+                      );
+                    },
+                  ),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CompareExpensesScreen()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.compare_arrows_rounded,
+                          color: Colors.white, // Icon color
+                        ),
+                        label: const Text(
+                          'Compare',
+                          style: TextStyle(
+                            color: Colors.white, // Text color
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 3, 63, 166),
+                          foregroundColor: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ]),
+
+              const SizedBox(height: 10),
               //weekly summary
               ExpenseSummary(startOfWeek: value.startOfWeekDate()),
 

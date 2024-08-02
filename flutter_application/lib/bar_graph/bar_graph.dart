@@ -58,12 +58,13 @@ class MyBarGraph extends StatelessWidget {
               x: data.x,
               barRods: [
                 BarChartRodData(
-                    toY: data.y,
-                    color: Color.fromARGB(255, 13, 75, 146),
-                    width: 25.0,
-                    borderRadius: BorderRadius.circular(4),
-                    backDrawRodData: BackgroundBarChartRodData(
-                        show: true, toY: maxY, color: Colors.grey[200]))
+                  toY: data.y,
+                  color: Color.fromARGB(255, 13, 75, 146),
+                  width: 25.0,
+                  borderRadius: BorderRadius.circular(4),
+                  backDrawRodData: BackgroundBarChartRodData(
+                      show: true, toY: maxY, color: Colors.grey[200]),
+                )
               ],
             ),
           )
@@ -76,7 +77,7 @@ Widget getBottomTitles(double value, TitleMeta meta) {
   const style = TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
-    fontSize: 14,
+    fontSize: 12,
   );
   Widget text;
   switch (value.toInt()) {

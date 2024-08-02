@@ -66,32 +66,33 @@ class CategoryGraph extends StatelessWidget {
 }
 
 Widget getBottomTitles(double value, TitleMeta meta) {
-  const style = TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-    fontSize: 14,
-  );
-  Widget text;
+  // const style = TextStyle(
+  //   color: Colors.white,
+  //   fontWeight: FontWeight.bold,
+  //   fontSize: 14,
+  // );
+  Widget icon;
   switch (value.toInt()) {
     case 0:
-      text = const Text('Food', style: style);
+      // text = const Text('F', style: style);
+      icon = const Icon(Icons.fastfood, color: Colors.white, size: 18);
       break;
     case 1:
-      text = const Text('Transport', style: style);
+      icon = const Icon(Icons.directions_bus, color: Colors.white, size: 18);
       break;
     case 2:
-      text = const Text('Shopping', style: style);
+      icon = const Icon(Icons.shopping_cart, color: Colors.white, size: 18);
       break;
     case 3:
-      text = const Text('Leisure', style: style);
+      icon = const Icon(Icons.beach_access, color: Colors.white, size: 18);
       break;
     case 4:
-      text = const Text('Other', style: style);
+      icon = const Icon(Icons.category, color: Colors.white, size: 18);
       break;
     default:
-      text = const Text('', style: style);
+      icon = const Icon(Icons.category, color: Colors.white, size: 18);
       break;
   }
 
-  return SideTitleWidget(axisSide: meta.axisSide, child: text);
+  return SideTitleWidget(axisSide: meta.axisSide, child: icon);
 }
