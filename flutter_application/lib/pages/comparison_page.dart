@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/bar_graph/category_graph.dart';
 import 'package:flutter_application/data/expense_data.dart';
+import 'package:flutter_application/components/comparison_card.dart';
 import 'package:flutter_application/date_time/date_time_helper.dart';
 import 'package:flutter_application/pages/home-page.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ class CompareExpensesScreen extends StatefulWidget {
 class _CompareExpensesScreenState extends State<CompareExpensesScreen> {
   String? selectedMonth1;
   String? selectedMonth2;
+  final thresholdController = TextEditingController();
 
   final List<String> months = [
     'January',
@@ -68,6 +70,41 @@ class _CompareExpensesScreenState extends State<CompareExpensesScreen> {
                 },
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Container(
+            //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            //     child: Align(
+            //       alignment: Alignment.centerLeft,
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           const Text(
+            //             'Set Expense Threshold:',
+            //             style: TextStyle(fontSize: 16.0),
+            //           ),
+            //           const SizedBox(height: 8),
+            //           SizedBox(
+            //             width: 375,
+            //             child: TextField(
+            //               controller: thresholdController,
+            //               keyboardType: TextInputType.number,
+            //               decoration: const InputDecoration(
+            //                 border: OutlineInputBorder(),
+            //                 hintText: 'Enter threshold value',
+            //               ),
+            //               onChanged: (value) {
+            //                 setState(() {
+            //                   // Handle threshold value change if needed
+            //                 });
+            //               },
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Expanded(
               child: Consumer<ExpenseData>(
                 builder: (context, expenseData, child) {
@@ -95,6 +132,13 @@ class _CompareExpensesScreenState extends State<CompareExpensesScreen> {
                               monthNameToNumber(selectedMonth2!)),
                         )
                       : 10000;
+
+                  // String month1 = DateTime(DateTime.now().year,
+                  //         monthNameToNumber(selectedMonth1!))
+                  //     .toString();
+                  // String month2 = DateTime(DateTime.now().year,
+                  //         monthNameToNumber(selectedMonth2!))
+                  //     .toString();
 
                   return Column(
                     children: [
@@ -138,37 +182,55 @@ class _CompareExpensesScreenState extends State<CompareExpensesScreen> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: 200,
+                      SizedBox(
+                        height: 400,
                         child: selectedMonth1 != null && selectedMonth2 != null
-                            ? Row(
+                            ? Column(
                                 children: [
                                   Expanded(
-                                    child: CategoryGraph(
-                                      maxY: maxY,
-                                      foodAmount: month1Summary['food'] ?? 0,
-                                      transportAmount:
-                                          month1Summary['transport'] ?? 0,
-                                      shoppingAmount:
-                                          month1Summary['shopping'] ?? 0,
-                                      leisureAmount:
-                                          month1Summary['leisure'] ?? 0,
-                                      otherAmount: month1Summary['other'] ?? 0,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: CategoryGraph(
+                                            maxY: maxY,
+                                            foodAmount:
+                                                month1Summary['food'] ?? 0,
+                                            transportAmount:
+                                                month1Summary['transport'] ?? 0,
+                                            shoppingAmount:
+                                                month1Summary['shopping'] ?? 0,
+                                            leisureAmount:
+                                                month1Summary['leisure'] ?? 0,
+                                            otherAmount:
+                                                month1Summary['other'] ?? 0,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: CategoryGraph(
+                                            maxY: maxY,
+                                            foodAmount:
+                                                month2Summary['food'] ?? 0,
+                                            transportAmount:
+                                                month2Summary['transport'] ?? 0,
+                                            shoppingAmount:
+                                                month2Summary['shopping'] ?? 0,
+                                            leisureAmount:
+                                                month2Summary['leisure'] ?? 0,
+                                            otherAmount:
+                                                month2Summary['other'] ?? 0,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                  const SizedBox(height: 10),
                                   Expanded(
-                                    child: CategoryGraph(
-                                      maxY: maxY,
-                                      foodAmount: month2Summary['food'] ?? 0,
-                                      transportAmount:
-                                          month2Summary['transport'] ?? 0,
-                                      shoppingAmount:
-                                          month2Summary['shopping'] ?? 0,
-                                      leisureAmount:
-                                          month2Summary['leisure'] ?? 0,
-                                      otherAmount: month2Summary['other'] ?? 0,
-                                    ),
-                                  ),
+                                      child: BalanceCard(
+                                    month1: DateTime(DateTime.now().year,
+                                        monthNameToNumber(selectedMonth1!)),
+                                    month2: DateTime(DateTime.now().year,
+                                        monthNameToNumber(selectedMonth2!)),
+                                  )),
                                 ],
                               )
                             : const Center(

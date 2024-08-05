@@ -22,6 +22,25 @@ class _HomePageState extends State<HomePage> {
   //Enum? cat;
   String? category;
 
+  // For filtering
+  String? _selectedFilterCategory;
+  final List<String> _categories = [
+    'all',
+    'food',
+    'transport',
+    'shopping',
+    'leisure',
+    'other'
+  ];
+  final Map<String, IconData> _categoryIcons = {
+    'all': Icons.all_inclusive,
+    'food': Icons.fastfood,
+    'transport': Icons.directions_bus,
+    'shopping': Icons.shopping_cart,
+    'leisure': Icons.beach_access,
+    'other': Icons.category,
+  };
+
   @override
   void initState() {
     super.initState();
@@ -66,8 +85,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
+                  Expanded(
                     child: TextButton.icon(
                       onPressed: () async {
                         DateTime? pickedDate = await showDatePicker(
@@ -90,23 +108,25 @@ class _HomePageState extends State<HomePage> {
                       icon: const Icon(Icons.calendar_today),
                     ),
                   ),
-                  DropdownButton<Category>(
-                    hint: const Text('Select Category'),
-                    value: selectedCategory,
-                    onChanged: (Category? newValue) {
-                      setState(() {
-                        // cat= newValue;
-                        category = newValue.toString().split('.').last;
-                        selectedCategory = newValue;
-                      });
-                    },
-                    items: Category.values
-                        .map<DropdownMenuItem<Category>>((Category value) {
-                      return DropdownMenuItem<Category>(
-                        value: value,
-                        child: Text(value.toString().split('.').last),
-                      );
-                    }).toList(),
+                  Expanded(
+                    child: DropdownButton<Category>(
+                      hint: const Text('Select Category'),
+                      value: selectedCategory,
+                      onChanged: (Category? newValue) {
+                        setState(() {
+                          // cat= newValue;
+                          category = newValue.toString().split('.').last;
+                          selectedCategory = newValue;
+                        });
+                      },
+                      items: Category.values
+                          .map<DropdownMenuItem<Category>>((Category value) {
+                        return DropdownMenuItem<Category>(
+                          value: value,
+                          child: Text(value.toString().split('.').last),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ],
               ),
@@ -257,10 +277,111 @@ class _HomePageState extends State<HomePage> {
                   ]),
 
               const SizedBox(height: 10),
+
               //weekly summary
               ExpenseSummary(startOfWeek: value.startOfWeekDate()),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
+
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //     child: SizedBox(
+              //       width: 375,
+              //       child: PopupMenuButton<String>(
+              //         tooltip: 'Filter expenses by category',
+              //         icon: const Icon(Icons.filter_list),
+              //         onSelected: (String newValue) {
+              //           setState(() {
+              //             _selectedFilterCategory = newValue;
+              //           });
+              //         },
+              //         itemBuilder: (BuildContext context) {
+              //           return _categories.map((String category) {
+              //             return PopupMenuItem<String>(
+              //               value: category,
+              //               child: Row(
+              //                 children: [
+              //                   Icon(
+              //                     _categoryIcons[category],
+              //                     size: 24.0,
+              //                     color: Color.fromARGB(255, 0, 0, 0),
+              //                   ),
+              //                   const SizedBox(width: 8),
+              //                   Text(category),
+              //                 ],
+              //               ),
+              //             );
+              //           }).toList();
+              //         },
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SizedBox(
+                    width: 350,
+                    child: DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        hintText: 'Filter Expense Data',
+                        prefixIcon: Icon(Icons.filter_list),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          borderSide: BorderSide(
+                            color: Colors
+                                .transparent, // Make the border transparent
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          borderSide: BorderSide(
+                            color: Colors
+                                .transparent, // Make the border transparent
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          borderSide: BorderSide(
+                            color: Colors
+                                .transparent, // Make the border transparent
+                          ),
+                        ),
+                      ),
+                      value: _selectedFilterCategory,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedFilterCategory = newValue;
+                        });
+                      },
+                      items: _categories.map((category) {
+                        return DropdownMenuItem(
+                          value: category,
+                          child: Row(
+                            children: [
+                              Icon(
+                                _categoryIcons[category],
+                                size: 24.0,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(category),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(
+                height: 8,
+              ),
 
               //exepenses list
               Expanded(
@@ -268,14 +389,21 @@ class _HomePageState extends State<HomePage> {
                     shrinkWrap: true,
                     physics: const ScrollPhysics(),
                     itemCount: value.getAllExpenseList().length,
-                    itemBuilder: (context, index) => ExpenseTile(
-                          name: value.getAllExpenseList()[index].name,
-                          amount: value.getAllExpenseList()[index].amount,
-                          dateTime: value.getAllExpenseList()[index].dateTime,
-                          category: value.getAllExpenseList()[index].category,
-                          deleteTapped: (p0) =>
-                              deleteExpense(value.getAllExpenseList()[index]),
-                        )),
+                    itemBuilder: (context, index) {
+                      final expense = value.getAllExpenseList()[index];
+                      if (_selectedFilterCategory == null ||
+                          _selectedFilterCategory == 'all' ||
+                          expense.category == _selectedFilterCategory) {
+                        return ExpenseTile(
+                          name: expense.name,
+                          amount: expense.amount,
+                          dateTime: expense.dateTime,
+                          category: expense.category,
+                          deleteTapped: (p0) => deleteExpense(expense),
+                        );
+                      }
+                      return Container();
+                    }),
               ),
             ]),
           ))),

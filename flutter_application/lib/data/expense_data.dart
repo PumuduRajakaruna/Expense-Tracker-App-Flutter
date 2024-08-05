@@ -214,4 +214,32 @@ class ExpenseData extends ChangeNotifier {
     }
     return max.toDouble() * 1.4;
   }
+
+  // calculate montly expense total
+  double calculateMonthlyTotalExpense(DateTime month) {
+    double totalExpense = 0.0;
+
+    // Get the start and end of the selected month
+    DateTime startOfMonth = DateTime(month.year, month.month, 1);
+    DateTime endOfMonth = DateTime(month.year, month.month + 1, 0);
+
+    for (var expense in overallExpenseList) {
+      // Convert amount from String to double
+      double amount = 0.0;
+      try {
+        amount = double.parse(expense.amount);
+      } catch (e) {
+        print('Invalid amount for expense ${expense.name}: ${expense.amount}');
+        continue; // Skip this expense if amount is invalid
+      }
+
+      // Check if the expense date is within the selected month
+      if (expense.dateTime.isAfter(startOfMonth.subtract(Duration(days: 1))) &&
+          expense.dateTime.isBefore(endOfMonth.add(Duration(days: 1)))) {
+        totalExpense += amount;
+      }
+    }
+
+    return totalExpense;
+  }
 }
