@@ -242,4 +242,41 @@ class ExpenseData extends ChangeNotifier {
 
     return totalExpense;
   }
+
+  // Get expenses for a specific month
+  List<ExpenseItem> getExpensesByMonth(DateTime month) {
+    List<ExpenseItem> monthlyExpenses = [];
+
+    // Get the start and end of the selected month
+    DateTime startOfMonth = DateTime(month.year, month.month, 1);
+    DateTime endOfMonth = DateTime(month.year, month.month + 1, 0);
+
+    for (var expense in overallExpenseList) {
+      // Check if the expense date is within the selected month
+      if (expense.dateTime.isAfter(startOfMonth.subtract(Duration(days: 1))) &&
+          expense.dateTime.isBefore(endOfMonth.add(Duration(days: 1)))) {
+        monthlyExpenses.add(expense);
+      }
+    }
+
+    return monthlyExpenses;
+  }
+
+  //get expenses list based on the date
+  List<ExpenseItem> getExpensesByDate(DateTime date) {
+    List<ExpenseItem> dailyExpenses = [];
+
+    DateTime targetDate = DateTime(date.year, date.month, date.day);
+
+    for (var expense in overallExpenseList) {
+      DateTime expenseDate = DateTime(
+          expense.dateTime.year, expense.dateTime.month, expense.dateTime.day);
+
+      if (expenseDate == targetDate) {
+        dailyExpenses.add(expense);
+      }
+    }
+
+    return dailyExpenses;
+  }
 }

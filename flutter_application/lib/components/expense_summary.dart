@@ -102,56 +102,80 @@ class ExpenseSummary extends StatelessWidget {
       builder: (context, value, child) => Column(
         children: [
           // Week total
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 25.0, right: 25.0, bottom: 5.0, top: 5.0),
-            child: Row(
-              children: [
-                const Text(
-                  'Week Total: ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white, // Text color
+          Row(
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Center(
+                          child: Text(
+                            'Week Total',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            '\Rs.${calculateWeekTotal(value, sunday, monday, tueday, wedday, thuday, friday, satday)}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                Text(
-                  '\Rs.${calculateWeekTotal(value, sunday, monday, tueday, wedday, thuday, friday, satday)}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white, // Text color
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Center(
+                          child: Text(
+                            'Today\'s Total',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            '\Rs.${value.calculateDailyExpenseSummary()[convertDateTimeToString(DateTime.now())]?.toStringAsFixed(2) ?? '0.00'}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        // const SizedBox(
+                        //   width: 20,
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-
-          // Today's daily expense
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 25.0, right: 25.0, bottom: 25.0, top: 5.0),
-            child: Row(
-              children: [
-                const Text(
-                  'Today\'s Total: ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white),
-                ),
-                Text(
-                  '\Rs.${value.calculateDailyExpenseSummary()[convertDateTimeToString(DateTime.now())]?.toStringAsFixed(2) ?? '0.00'}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
 
           // PageView for graphs

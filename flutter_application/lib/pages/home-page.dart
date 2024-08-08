@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   final newExpenseNameController = TextEditingController();
   final newExpenseAmountController = TextEditingController();
   DateTime? selectedDate;
+  DateTime? _selectedDateForExpense;
   Category? selectedCategory;
   //Enum? cat;
   String? category;
@@ -323,7 +324,7 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: SizedBox(
                     width: 350,
                     child: DropdownButtonFormField<String>(
@@ -333,22 +334,19 @@ class _HomePageState extends State<HomePage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
                           borderSide: BorderSide(
-                            color: Colors
-                                .transparent, // Make the border transparent
+                            color: Colors.transparent,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
                           borderSide: BorderSide(
-                            color: Colors
-                                .transparent, // Make the border transparent
+                            color: Colors.transparent,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
                           borderSide: BorderSide(
-                            color: Colors
-                                .transparent, // Make the border transparent
+                            color: Colors.transparent,
                           ),
                         ),
                       ),
@@ -380,7 +378,55 @@ class _HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(
-                height: 8,
+                height: 6,
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: Row(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate:
+                                _selectedDateForExpense ?? DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime.now(),
+                          );
+                          if (pickedDate != null &&
+                              pickedDate != _selectedDateForExpense) {
+                            setState(() {
+                              _selectedDateForExpense = pickedDate;
+                            });
+                          }
+                        },
+                        label: Text(
+                          _selectedDateForExpense == null
+                              ? 'Today'
+                              : '${_selectedDateForExpense!.day.toString()}/${_selectedDateForExpense!.month.toString()}/${_selectedDateForExpense!.year.toString()}',
+                        ),
+                        icon: const Icon(Icons.calendar_today,
+                            color: Colors.black),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 200,
+                    ),
+                    Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedFilterCategory = null;
+                                _selectedDateForExpense = null;
+                              });
+                            },
+                            child: const Text('View All'))),
+                  ],
+                ),
               ),
 
               //exepenses list
@@ -391,9 +437,21 @@ class _HomePageState extends State<HomePage> {
                     itemCount: value.getAllExpenseList().length,
                     itemBuilder: (context, index) {
                       final expense = value.getAllExpenseList()[index];
-                      if (_selectedFilterCategory == null ||
+
+                      // Check if the expense matches the selected filter
+                      bool matchesCategory = _selectedFilterCategory == null ||
                           _selectedFilterCategory == 'all' ||
-                          expense.category == _selectedFilterCategory) {
+                          expense.category == _selectedFilterCategory;
+
+                      bool matchesDate = _selectedDateForExpense == null ||
+                          expense.dateTime.year ==
+                                  _selectedDateForExpense!.year &&
+                              expense.dateTime.month ==
+                                  _selectedDateForExpense!.month &&
+                              expense.dateTime.day ==
+                                  _selectedDateForExpense!.day;
+
+                      if (matchesCategory && matchesDate) {
                         return ExpenseTile(
                           name: expense.name,
                           amount: expense.amount,

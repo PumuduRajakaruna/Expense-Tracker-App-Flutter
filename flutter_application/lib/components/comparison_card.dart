@@ -14,6 +14,9 @@ class BalanceCard extends StatefulWidget {
 }
 
 class _BalanceCardState extends State<BalanceCard> {
+  late String month1Name;
+  late String month2Name;
+
   @override
   void initState() {
     super.initState();
@@ -22,6 +25,25 @@ class _BalanceCardState extends State<BalanceCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    // Initialize the month names
+    month1Name = monthNames[widget.month1.month - 1];
+    month2Name = monthNames[widget.month2.month - 1];
+
     return Consumer<ExpenseData>(
       builder: (context, expenseData, child) {
         double month1total =
@@ -29,18 +51,25 @@ class _BalanceCardState extends State<BalanceCard> {
         double month2total =
             expenseData.calculateMonthlyTotalExpense(widget.month2);
 
+        Icon arrow;
+        double difference;
+
+        if (month1total > month2total) {
+          difference = month1total - month2total;
+          arrow = const Icon(
+            Icons.arrow_downward,
+            color: Colors.green,
+          );
+        } else {
+          difference = month2total - month1total;
+          arrow = const Icon(Icons.arrow_upward, color: Colors.red);
+        }
+
         return Container(
-          width: 300,
+          width: 400,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [
-                Color.fromARGB(255, 84, 170, 239),
-                Color.fromARGB(255, 206, 101, 224),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -55,53 +84,95 @@ class _BalanceCardState extends State<BalanceCard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Month 1 Total',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                child: Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Text(
+                            '$month1Name Total',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        '\Rs. $month1total',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Text(
+                            '\Rs. $month1total',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Month 2 Total',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                child: Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Text(
+                            '$month2Name Total',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        '\Rs. $month2total',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Text(
+                            '\Rs. $month2total',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Center(child: arrow),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            '\Rs. $difference',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
